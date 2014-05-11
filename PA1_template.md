@@ -43,12 +43,29 @@ median(stepsPerDay)
 
 
 ```r
-stepsPerInterval <- tapply(activity$steps, activity$interval, mean, na.rm = T)
-plot(names(stepsPerInterval), stepsPerInterval, type = "l", col = "blue", xlab = "Interval", 
-    ylab = "Number of steps (mean)")
+stepsPerInterval <- aggregate(activity$steps, list(activity$interval), mean, 
+    na.rm = T)
+plot(stepsPerInterval[, 1], stepsPerInterval[, 2], type = "l", col = "blue", 
+    xlab = "Interval", ylab = "Number of steps (mean)")
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+
+```r
+
+sortedSteps <- stepsPerInterval[order(stepsPerInterval[, 2], decreasing = T), 
+    ]
+```
+
+Interval with most steps:
+
+```r
+sortedSteps[1, 1]
+```
+
+```
+## [1] 835
+```
 
 
 ## Imputing missing values
@@ -69,12 +86,19 @@ sum(missingRows)
 activity2 <- activity
 intervalForMissingRows <- activity2$interval[which(missingRows)]
 activity2$steps[which(missingRows)] <- as.vector(stepsPerInterval[as.character(intervalForMissingRows)])
+```
+
+```
+## Error: undefined columns selected
+```
+
+```r
 
 stepsPerDay2 <- tapply(activity2$steps, activity2$date, sum, na.rm = T)
 hist(stepsPerDay2)
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
 
 ```r
 
@@ -82,7 +106,7 @@ mean(stepsPerDay2)
 ```
 
 ```
-## [1] 10766
+## [1] 9354
 ```
 
 ```r
@@ -91,7 +115,7 @@ median(stepsPerDay2)
 ```
 
 ```
-## [1] 10766
+## [1] 10395
 ```
 
 
@@ -119,5 +143,5 @@ plot(names(stepsPerIntervalWeekDay), stepsPerIntervalWeekDay, type = "l", col = 
     xlab = "Interval", ylab = "Number of steps (mean)", main = "Weekdays")
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
 

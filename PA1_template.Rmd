@@ -22,9 +22,15 @@ median(stepsPerDay)
 ## What is the average daily activity pattern?
 
 ```{r}
-stepsPerInterval <- tapply(activity$steps, activity$interval, mean, na.rm=T)
-plot(names(stepsPerInterval), stepsPerInterval, type='l', col="blue",
+stepsPerInterval <- aggregate(activity$steps, list(activity$interval), mean, na.rm=T)
+plot(stepsPerInterval[,1], stepsPerInterval[,2], type='l', col="blue",
      xlab="Interval", ylab="Number of steps (mean)")
+
+sortedSteps <- stepsPerInterval[order(stepsPerInterval[,2], decreasing=T),]
+```
+Interval with most steps:
+```{r}
+sortedSteps[1, 1]
 ```
 
 ## Imputing missing values
